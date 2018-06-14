@@ -2,7 +2,13 @@
 #dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
 #dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
 
+# MSM8976
+dtb-$(CONFIG_MACH_LENOVO_YTX703) += \
+	YTX703F.dtb \
+	YTX703L.dtb
+
 ifeq ($(CONFIG_ARCH_QCOM_BUILD_REFERENCE),y)
+
 ifeq ($(CONFIG_BUILD_ARM64_DT_OVERLAY),y)
 	dtbo-$(CONFIG_ARCH_SDM845) += \
 		sdm845-cdp-overlay.dtbo \
