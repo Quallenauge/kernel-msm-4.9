@@ -91,14 +91,6 @@ static struct ctl_table sip_sysctl_tbl[] = {
 	{}
 };
 
-static unsigned int (*nf_nat_sip_hook)
-					(struct sk_buff *skb,
-					unsigned int protoff,
-					unsigned int dataoff,
-					const char **dptr,
-					unsigned int *datalen)
-					__read_mostly;
-EXPORT_SYMBOL(nf_nat_sip_hook);
 static void sip_calculate_parameters(s16 *diff, s16 *tdiff,
 				     unsigned int *dataoff, const char **dptr,
 				     unsigned int *datalen,
@@ -302,67 +294,6 @@ void (*nf_nat_sip_seq_adjust_hook)
 			(struct sk_buff *skb,
 			unsigned int protoff,
 			s16 off);
-
-static unsigned int (*nf_nat_sip_expect_hook)
-					(struct sk_buff *skb,
-					unsigned int protoff,
-					unsigned int dataoff,
-					const char **dptr,
-					unsigned int *datalen,
-					struct nf_conntrack_expect *exp,
-					unsigned int matchoff,
-					unsigned int matchlen)
-					__read_mostly;
-EXPORT_SYMBOL(nf_nat_sip_expect_hook);
-
-static unsigned int (*nf_nat_sdp_addr_hook)
-					(struct sk_buff *skb,
-					unsigned int protoff,
-					unsigned int dataoff,
-					const char **dptr,
-					unsigned int *datalen,
-					unsigned int sdpoff,
-					enum sdp_header_types type,
-					enum sdp_header_types term,
-					const union nf_inet_addr *addr)
-					__read_mostly;
-EXPORT_SYMBOL(nf_nat_sdp_addr_hook);
-
-static unsigned int (*nf_nat_sdp_port_hook)
-					(struct sk_buff *skb,
-					unsigned int protoff,
-					unsigned int dataoff,
-					const char **dptr,
-					unsigned int *datalen,
-					unsigned int matchoff,
-					unsigned int matchlen,
-					u_int16_t port) __read_mostly;
-EXPORT_SYMBOL(nf_nat_sdp_port_hook);
-
-static unsigned int (*nf_nat_sdp_session_hook)
-					(struct sk_buff *skb,
-					unsigned int protoff,
-					unsigned int dataoff,
-					const char **dptr,
-					unsigned int *datalen,
-					unsigned int sdpoff,
-					const union nf_inet_addr *addr)
-					__read_mostly;
-EXPORT_SYMBOL(nf_nat_sdp_session_hook);
-
-static unsigned int (*nf_nat_sdp_media_hook)
-					(struct sk_buff *skb,
-					unsigned int protoff,
-					unsigned int dataoff,
-					const char **dptr,
-					unsigned int *datalen,
-					struct nf_conntrack_expect *rtp_exp,
-					struct nf_conntrack_expect *rtcp_exp,
-					unsigned int mediaoff,
-					unsigned int medialen,
-					union nf_inet_addr *rtp_addr)
-					__read_mostly;
-EXPORT_SYMBOL(nf_nat_sdp_media_hook);
 
 static int string_len(const struct nf_conn *ct, const char *dptr,
 		      const char *limit, int *shift)
