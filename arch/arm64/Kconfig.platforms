@@ -180,7 +180,7 @@ config ARCH_MSM8916
 	depends on ARCH_QCOM
 	select CPU_FREQ_QCOM
 	select COMMON_CLK
-	select COMMON_CLK_MSM
+	select COMMON_CLK_QCOM
 	select RCU_BOOST if DEBUG_KMEMLEAK
 	help
 	  This enables support for the MSM8916 chipset. If you do not
