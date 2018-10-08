@@ -514,6 +514,8 @@ static inline int clk_prepare_enable(struct clk *clk)
 	return ret;
 }
 
+void clock_debug_print_enabled(bool print_parent);
+
 /* clk_disable_unprepare helps cases using clk_disable in non-atomic context. */
 static inline void clk_disable_unprepare(struct clk *clk)
 {
