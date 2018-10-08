@@ -832,6 +832,7 @@ static int clk_core_prepare_lock(struct clk_core *core)
 	return ret;
 }
 
+#ifndef CONFIG_COMMON_CLK_MSM
 /**
  * clk_prepare - prepare a clock source
  * @clk: the clk being prepared
@@ -852,6 +853,7 @@ int clk_prepare(struct clk *clk)
 	return clk_core_prepare_lock(clk->core);
 }
 EXPORT_SYMBOL_GPL(clk_prepare);
+#endif
 
 static void clk_core_disable(struct clk_core *core)
 {
@@ -1947,6 +1949,7 @@ static int clk_core_set_rate_nolock(struct clk_core *core,
 	return ret;
 }
 
+#ifndef CONFIG_COMMON_CLK_MSM
 /**
  * clk_set_rate - specify a new rate for clk
  * @clk: the clk whose rate is being changed
@@ -1985,6 +1988,7 @@ int clk_set_rate(struct clk *clk, unsigned long rate)
 	return ret;
 }
 EXPORT_SYMBOL_GPL(clk_set_rate);
+#endif
 
 /**
  * clk_set_rate_range - set a rate range for a clock source
@@ -2199,6 +2203,7 @@ out:
 	return ret;
 }
 
+#ifndef CONFIG_COMMON_CLK_MSM
 /**
  * clk_set_parent - switch the parent of a mux clk
  * @clk: the mux clk whose input we are switching
@@ -2224,6 +2229,7 @@ int clk_set_parent(struct clk *clk, struct clk *parent)
 	return clk_core_set_parent(clk->core, parent ? parent->core : NULL);
 }
 EXPORT_SYMBOL_GPL(clk_set_parent);
+#endif
 
 /**
  * clk_set_phase - adjust the phase shift of a clock signal
@@ -2754,6 +2760,7 @@ static const struct file_operations clk_enabled_list_fops = {
 	.release	= seq_release,
 };
 
+#ifndef CONFIG_COMMON_CLK_MSM
 void clk_debug_print_hw(struct clk_core *clk, struct seq_file *f)
 {
 	if (IS_ERR_OR_NULL(clk))
@@ -2768,6 +2775,7 @@ void clk_debug_print_hw(struct clk_core *clk, struct seq_file *f)
 
 	clk->ops->list_registers(f, clk->hw);
 }
+#endif
 
 static int print_hw_show(struct seq_file *m, void *unused)
 {
