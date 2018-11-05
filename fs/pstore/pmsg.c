@@ -34,7 +34,7 @@ static ssize_t write_pmsg(struct file *file, const char __user *buf,
 		return -EFAULT;
 
 	mutex_lock(&pmsg_lock);
-	ret = psinfo->write_buf_user(PSTORE_TYPE_PMSG, 0, &id, 0, buf, 0, count,
+	ret = psinfo->write_buf_user(PSTORE_TYPE_PMSG, 0, &id, 0, buf, count,
 				     psinfo);
 	mutex_unlock(&pmsg_lock);
 	return ret ? ret : count;
@@ -90,11 +90,4 @@ err_class:
 	unregister_chrdev(pmsg_major, PMSG_NAME);
 err:
 	return;
-}
-
-void pstore_unregister_pmsg(void)
-{
-	device_destroy(pmsg_class, MKDEV(pmsg_major, 0));
-	class_destroy(pmsg_class);
-	unregister_chrdev(pmsg_major, PMSG_NAME);
 }
