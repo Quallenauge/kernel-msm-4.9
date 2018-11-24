@@ -272,6 +272,11 @@ dtb-$(CONFIG_ARCH_MSM8909) += msm8909-pm8916-mtp.dtb \
 	msm8909-1gb-mtp.dtb
 
 
+# MSM8976
+dtb-$(CONFIG_MACH_LENOVO_YTX703) += \
+       YTX703F.dtb \
+       YTX703L.dtb
+
 ifeq ($(CONFIG_ARM64),y)
 always          := $(dtb-y)
 subdir-y        := $(dts-dirs)
