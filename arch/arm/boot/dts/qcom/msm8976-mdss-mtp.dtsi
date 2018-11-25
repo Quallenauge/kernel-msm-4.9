@@ -24,6 +24,7 @@
 	qcom,mdss-dsi-pan-fps-update = "dfps_immediate_porch_mode_hfp";
 };
 
+/*
 &dsi_dual_nt35597_cmd {
 	qcom,panel-supply-entries = <&dsi_panel_pwr_supply>;
 	qcom,mdss-dsi-bl-pmic-control-type = "bl_ctrl_wled";
@@ -50,6 +51,7 @@
 	qcom,mdss-dsi-bl-max-level = <4095>;
 	qcom,mdss-dsi-mode-sel-gpio-state = "dsc_mode";
 };
+*/
 
 &pmx_mdss {
 	qcom,num-grp-pins = <3>;
