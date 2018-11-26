@@ -27,6 +27,7 @@
 #include <linux/seq_file.h>
 #include <linux/notifier.h>
 #include <linux/cpufreq.h>
+#include "rndis.h"
 #include "u_ether.h"
 
 

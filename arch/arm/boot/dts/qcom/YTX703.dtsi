@@ -51,77 +51,132 @@
 			};
 		};
 	};
+	qcom,mdss_mdp@1a00000 {
+		/delete-property/ qcom,mdss-ppb-off; //  = <0x00000420>;
+		qcom,mdss-cdm-off = <0x0007A200>;
+		qcom,mdss-ppb-ctl-off = <0x00000420>;
+		qcom,mdss-ppb-cfg-off = <0x00000424>; // qcom,mdss-ppb-ctl-off + 4
+
+		qcom,mdss-has-pingpong-split; // formaly known as qcom,mdss-has-dst-split;
+		/delete-property/ qcom,mdss-has-source-split;
+		/delete-property/ qcom,mdss-has-separate-rotator;
+	};
+
+	qcom,wdt@b017000 {
+			qcom,bark-time = <48000>;
+	};
 };
 
 /*
  * Pin muxing settings
  * Overrides msm8976-pinctrl.dtsi
  */
-&tlmm_pinmux {
-	fusb_int {
-		qcom,pins = <&gp 135>;
-		qcom,pin-func = <0>;
-		qcom,num-grp-pins = <1>;
-		label = "fusb_int";
-		fusb_int_active: active {
-			drive-strength = <2>; /* mA */
-			bias-pull-up;
+&msm_gpio {
+    fusb_int {
+            fusb_int_active: active {
+		mux {
+		    pins = "gpio135";
+		    function = "gpio";
 		};
-		fusb_int_suspend: suspend {
-			drive-strength = <2>; /* mA */
-			bias-pull-up;
+		config {
+		    pins = "gpio135";
+		    drive-strength = <2>; /* mA */
+                    bias-pull-up;
 		};
-	};
-	usb_c_intn_pin {
-		qcom,pins = <&gp 96>, <&gp 135>, <&gp 101>;
-		qcom,num-grp-pins = <3>;
-	};
-	charger_int_pin {
-		qcom,pins = <&gp 68>;
-		qcom,num-grp-pins = <1>;
-		qcom,pin-func = <1>;
-		label = "charger_int_pin";
-		charger_int_default: charger_int_default {
-			drive-strength = <2>; /* mA */
-			bias-pull-up;
+            };
+            fusb_int_suspend: suspend {
+		mux {
+		    pins = "gpio135";
+		    function = "gpio";
 		};
-	};
-	charger_psel_pin {
-		qcom,pins = <&gp 16>;
-		qcom,num-grp-pins = <1>;
-		qcom,pin-func = <0>;
-		label = "charger_psel_pin";
-		charger_psel_default:  charger_psel_default {
-			drive-strength = <2>; /* mA */
-			bias-pull-up;
+		config {
+		    pins = "gpio135";
+		    drive-strength = <2>; /* mA */
+                    bias-pull-up;
 		};
+            };
+    };
+    usb_c_intn_pin {
+	    mux {
+		pins = "gpio96", "gpio135", "gpio101";
+	    };
+
+	    config {
+		pins = "gpio96", "gpio135", "gpio101";
+	    };
+    };
+    charger_int_pin {
+        charger_int_default: charger_int_default {
+            mux {
+                pins = "gpio68";
+                function = "us_emitter";
+            };
+            config {
+                pins = "gpio68";
+                drive-strength = <2>; /* mA */
+                bias-pull-up;
+            };
+       };
+    };
+    charger_psel_pin {
+	charger_psel_default:  charger_psel_default {
+            mux {
+                pins = "gpio16";
+                function = "gpio";
+            };
+            config {
+                pins = "gpio16";
+                drive-strength = <2>; /* mA */
+                bias-pull-up;
+            };
 	};
+    };
+    cam_sensor_mclk0_default {
 	cam_sensor_mclk0_default {
-		cam_sensor_mclk0_default {
-			drive-strength = <6>; /* mA, previously 2 */
-		};
+            config {
+                drive-strength = <6>; /* mA, previously 2 */
+            };
 	};
+    };
+    cam_sensor_mclk0_sleep {
 	cam_sensor_mclk0_sleep {
-		cam_sensor_mclk0_sleep {
-			drive-strength = <6>; /* mA, previously 2 */
-		};
+            config {
+	        drive-strength = <6>; /* mA, previously 2 */
+            };
 	};
-	cam_sensor_rear_default {
-		qcom,pins = <&gp 35>; /* STANDBY - RESET pin is removed */
-		qcom,num-grp-pins = <1>;
-	};
-	cam_sensor_rear_sleep {
-		qcom,pins = <&gp 35>; /* STANDBY - RESET pin is removed */
-		qcom,num-grp-pins = <1>;
-	};
-	cam_sensor_front_default {
-		qcom,pins = <&gp 131>; /* RESET - STANDBY pin is removed */
-		qcom,num-grp-pins = <1>;
-	};
-	cam_sensor_front_sleep {
-		qcom,pins = <&gp 131>; /* RESET - STANDBY pin is removed */
-		qcom,num-grp-pins = <1>;
-	};
+    };
+    cam_sensor_rear_default {
+        mux {
+            pins = "gpio35"; /* STANDBY - RESET pin is removed */
+        };
+        config {
+            pins = "gpio35"; /* STANDBY - RESET pin is removed */
+        };
+    };
+    cam_sensor_rear_sleep {
+        mux {
+            pins = "gpio35"; /* STANDBY - RESET pin is removed */
+        };
+        config {
+            pins = "gpio35"; /* STANDBY - RESET pin is removed */
+        };
+    };
+    cam_sensor_front_default {
+        mux {
+            pins = "gpio131"; /* RESET - STANDBY pin is removed */
+        };
+        config {
+            pins = "gpio131"; /* RESET - STANDBY pin is removed */
+        };
+    };
+    cam_sensor_front_sleep {
+        mux {
+            pins = "gpio131"; /* RESET - STANDBY pin is removed */
+        };
+        config {
+            pins = "gpio131"; /* RESET - STANDBY pin is removed */
+        };
+    };
 };
 
 /* LCD panel
@@ -129,29 +184,79 @@
  * - Overrides dsi-panel-nt35597-dualmipi-wqxga-video.dtsi
  */
 &dsi_dual_nt35597_video {
-	qcom,mdss-dsi-panel-width = <800>;  /* Previously 720 */
-	qcom,mdss-dsi-h-front-porch = <17>; /* Horizontal front porch in pixels; previously 100 */
-	qcom,mdss-dsi-h-back-porch = <30>;  /* Horizontal back porch in pixels; previously 32 */
-	qcom,mdss-dsi-h-pulse-width = <4>;  /* Previously 16 */
-	qcom,mdss-dsi-v-back-porch = <24>;  /* Vertical back porch in pixels; previously 7 */
-	qcom,mdss-dsi-v-front-porch = <16>; /* Vertical front porch in pixels; previously 8 */
-	qcom,mdss-dsi-v-pulse-width = <8>;  /* Previously 1 */
-	qcom,mdss-dsi-on-command =
-	       [39 01 00 00 01 00 06 f0 55 aa 52 08 00
-	        15 01 00 00 01 00 02 c0 0d
-	        39 01 00 00 01 00 05 b8 03 06 00 00
-	        39 01 00 00 01 00 05 ff aa 55 a5 80
-	        15 01 00 00 01 00 02 6f 0f
-	        15 01 00 00 01 00 02 f7 01
-	        39 01 00 00 01 00 05 ff aa 55 a5 00
-	        15 01 00 00 01 00 02 62 01
-	        15 01 00 00 01 00 02 55 00 /* CABC (0: off, 1: UI, 2: Picture, 3: Video) */
-	        15 01 00 00 01 00 02 53 24
-	        15 01 00 00 01 00 02 51 80
-	        05 01 00 00 78 00 02 11 00
-	        05 01 00 00 15 00 02 29 00];
-	/* DSI PHY timings */
-	qcom,mdss-dsi-panel-timings = [D5 32 22 00 60 64 26 34 29 03 04 00];
+/*
+        qcom,mdss-dsi-panel-timings-phy-v2 = [23 1e 07 08 05 03 04 a0
+                23 1e 07 08 05 03 04 a0
+                23 1e 07 08 05 03 04 a0
+                23 1e 07 08 05 03 04 a0
+                23 18 07 08 04 03 04 a0];
+*/
+        qcom,mdss-dsi-min-refresh-rate = <53>;
+        qcom,mdss-dsi-max-refresh-rate = <60>;
+
+	qcom,panel-supply-entries = <&dsi_panel_pwr_supply>;
+    qcom,mdss-dsi-tx-eot-append;
+//	qcom,mdss-dsi-bl-pmic-control-type = "bl_ctrl_wled";
+	qcom,mdss-dsi-bl-min-level = <1>;
+	qcom,mdss-dsi-bl-max-level = <4095>;
+	qcom,mdss-dsi-pan-enable-dynamic-fps;
+	qcom,mdss-dsi-pan-fps-update = "dfps_immediate_porch_mode_hfp";
+	// qcom,mdss-dsi-reset-sequence = <1 20>, <0 20>, <1 50>; // qcom,mdss-dsi-reset-sequence = <1 10>, <0 10>, <1 10>;
+	// qcom,mdss-dsi-t-clk-pre = <0x2a>; // qcom,mdss-dsi-t-clk-pre = <0x2d>;
+	qcom,mdss-dsi-mode-sel-gpio-state = "high"; // formerly known as qcom,mdss-dsi-mode-sel-gpio-state = "dsc_mode";
+	// qcom,mdss-dsi-t-clk-post = <0x0d>;
+//    qcom,mdss-dsi-display-timings {
+//        timing@0 {
+            qcom,mdss-dsi-panel-width = <800>;  /* Previously 720 */
+            qcom,mdss-dsi-h-front-porch = <17>; /* Horizontal front porch in pixels; previously 100 */
+            qcom,mdss-dsi-h-back-porch = <30>;  /* Horizontal back porch in pixels; previously 32 */
+            qcom,mdss-dsi-h-pulse-width = <4>;  /* Previously 16 */
+            qcom,mdss-dsi-v-back-porch = <24>;  /* Vertical back porch in pixels; previously 7 */
+            qcom,mdss-dsi-v-front-porch = <16>; /* Vertical front porch in pixels; previously 8 */
+            qcom,mdss-dsi-v-pulse-width = <8>;  /* Previously 1 */
+            qcom,mdss-dsi-bl-pmic-control-type = "bl_ctrl_dcs"; /* control backlight via dsi commands */
+            /* Backlight controller operates in range 0<x<256 */
+            qcom,mdss-dsi-bl-min-level = <0x01>;
+            qcom,mdss-dsi-bl-max-level = <0xFF>;
+            qcom,mdss-dsi-post-init-delay = <0x1>;
+            qcom,mdss-dsi-on-command =
+                   [39 01 00 00 01 00 06 f0 55 aa 52 08 00 /* Set internal registers */
+                    15 01 00 00 01 00 02 c0 0d
+                    39 01 00 00 01 00 05 b8 03 06 00 00
+                    39 01 00 00 01 00 05 ff aa 55 a5 80 /* Set internal registers */
+                    15 01 00 00 01 00 02 6f 0f
+                    15 01 00 00 01 00 02 f7 01
+                    39 01 00 00 01 00 05 ff aa 55 a5 00 /* Set internal registers */
+                    15 01 00 00 01 00 02 62 01
+                    15 01 00 00 01 00 02 5E 10 /* Set minimal brightness used in cabc */
+                    05 01 00 00 78 00 02 11 00 /* Exit the sleep mode */
+                   ];
+            /* DSI PHY timings */
+            qcom,mdss-dsi-panel-timings = [D5 32 22 00 60 64 26 34 29 03 04 00];
+            qcom,mdss-dsi-post-panel-on-command =
+                   [39 01 00 00 01 00 02 FF 23 /* Enter CMD2 page3 */
+                    39 01 00 00 00 00 02 00 02 /* DMCT = 1, Select the enable / disable mechanism for CABC and Manual dimming functions. */
+                    39 01 00 00 00 00 02 05 24 /* Moving mode dimming 32step, still mode 32step */
+                    39 01 00 00 00 00 02 FB 01 /* MTP do not reload CMD2 P3 */
+                    39 01 00 00 01 00 02 FF 10 /* Enter CMD1 */
+                    15 01 00 00 01 00 02 53 2C /* Enable backlight via pwm control.
+                                                  Enable dimming in general (with or w/o cabc). */
+                    05 01 00 00 15 00 02 29 00 /* Display on */
+                  ];
+
+            qcom,config-select = <&dsi_dual_nt35597_video_config1>;
+
+            cm,mdss-livedisplay-command-state = "dsi_lp_mode";
+
+            /* CABC init commands / values */
+            cm,mdss-livedisplay-cabc-cmd = [
+                15 01 00 00 01 00 02 55 00 /* CABC (0: off, 1: UI, 2: Picture, 3: Video) */
+            ];
+            cm,mdss-livedisplay-cabc-ui-value = <0x02>;
+            cm,mdss-livedisplay-cabc-image-value = <0x02>;
+            cm,mdss-livedisplay-cabc-video-value = <0x02>;
+//        };
+//    };
 };
 /*
  * Overrides msm8976-mdss-mtp.dtsi
@@ -161,9 +266,14 @@
 	/delete-property/ qcom,mdss-dsi-pan-fps-update;
 };
 &mdss_dsi0 {
+    status = "ok";
+    qcom,display-id = "primary";
 	/delete-property/ qcom,platform-bklight-en-gpio;
+    /delete-property/ qcom,cont-splash-enabled;
+    
 };
 &mdss_dsi1 {
+    status = "ok";
 	/delete-property/ qcom,platform-bklight-en-gpio;
 };
 /*
@@ -171,7 +281,17 @@
  * Overrides msm8976-mdss.dtsi
  */
 &mdss_fb0 {
-	/delete-property/ qcom,mdss-fb-splash-logo-enabled;
+	qcom,dsi-pref-prim-pan = <&dsi_dual_nt35597_video>;
+    /delete-property/ qcom,mdss-fb-splash-logo-enabled;
+};
+
+&mdss_dsi0_pll {
+	// qcom,dsi-pll-video-mode-fixup;
+};
+
+&mdss_dsi1_pll {
+    // qcom,dsi-pll-video-mode-fixup;
+	status = "ok";
 };
 
 /*
@@ -310,7 +430,7 @@
  * - msm-pmi8950.dtsi
  * - msm8976-mtp.dtsi
  */
-&pmi8950_haptic {
+&pmi_haptic {
 	qcom,actuator-type = "erm";
 	qcom,vmax-mv = <2200>;
 };

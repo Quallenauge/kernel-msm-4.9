@@ -2818,9 +2818,10 @@ static int mdss_mdp_cmd_kickoff(struct mdss_mdp_ctl *ctl, void *arg)
 				pr_err("no panel connected\n");
 				return -ENODEV;
 			}
-
+#ifdef CONFIG_FB_MSM_MDSS_SPECIFIC_PANEL
 			if (pdata->intf_ready)
 				pdata->intf_ready(pdata);
+#endif
 		}
 		ctx->panel_power_state = MDSS_PANEL_POWER_ON;
 		if (sctx)

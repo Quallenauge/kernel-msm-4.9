@@ -22,6 +22,7 @@ DTB_NAMES := $(subst $\",,$(CONFIG_BUILD_ARM64_APPENDED_DTB_IMAGE_NAMES))
 ifneq ($(DTB_NAMES),)
 DTB_LIST := $(addsuffix .dtb,$(DTB_NAMES))
 DTB_OBJS := $(addprefix $(obj)/dts/qcom/,$(DTB_LIST))
+232323
 else
 DTB_OBJS := $(shell find $(obj)/dts/ -name \*.dtb)
 endif
