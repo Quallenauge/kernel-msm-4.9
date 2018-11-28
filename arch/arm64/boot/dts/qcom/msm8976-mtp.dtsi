@@ -119,10 +119,6 @@
 	pinctrl-0 = <&uart_console_sleep>;
 };
 
-&mem_client_3_size {
-	qcom,peripheral-size = <0x500000>;
-};
-
 &spmi_bus {
 	qcom,pmi8950@3 {
 		qcom,leds@d800 {
@@ -230,16 +226,6 @@
 	mtp_batterydata: qcom,battery-data {
 		qcom,batt-id-range-pct = <15>;
 	};
-};
-
-&pmi8950_fg {
-	qcom,battery-data = <&mtp_batterydata>;
-};
-
-&pmi8950_charger {
-	qcom,battery-data = <&mtp_batterydata>;
-	qcom,chg-led-support;
-	qcom,chg-led-sw-controls;
 };
 
 /* CoreSight */
