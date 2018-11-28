@@ -51,6 +51,13 @@
 			};
 		};
 	};
+
+	qcom,mdss_mdp@1a00000 {
+		/delete-property/ qcom,mdss-ppb-off; //  = <0x00000420>;
+		qcom,mdss-cdm-off = <0x0007A200>;
+		qcom,mdss-ppb-ctl-off = <0x00000420>;
+		qcom,mdss-ppb-cfg-off = <0x00000424>; // qcom,mdss-ppb-ctl-off + 4
+	};
 };
 
 /*
