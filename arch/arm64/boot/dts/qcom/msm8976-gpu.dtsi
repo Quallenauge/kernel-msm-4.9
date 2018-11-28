@@ -45,6 +45,7 @@
 		reg-names = "kgsl_3d0_reg_memory" , "kgsl_3d0_shader_memory";
 		interrupts = <0 33 0>;
 		interrupt-names = "kgsl_3d0_irq";
+		#cooling-cells = <2>;
 		qcom,id = <0>;
 
 		qcom,chipid = <0x05010000>;
@@ -52,13 +53,17 @@
 		qcom,initial-pwrlevel = <5>;
 
 		qcom,idle-timeout = <80>; //msecs
-		qcom,deep-nap-timeout = <20>; //msecs
+		qcom,deep-nap-timeout = <100>; //msecs
 		qcom,strtstp-sleepwake;
 
 		qcom,snapshot-size = <1048576>; //bytes
 
 		qcom,pm-qos-active-latency = <401>;
 		qcom,pm-qos-wakeup-latency = <101>;
+
+		/* Quirks */
+		qcom,gpu-quirk-dp2clockgating-disable;
+		qcom,gpu-quirk-lmloadkill-disable;
 
 		/* Avoid L2PC on big cluster CPUs (CPU 4,5,6,7) */
 		qcom,l2pc-cpu-mask = <0x000000F0>;
@@ -71,20 +76,28 @@
 		 */
 		qcom,clk-map = <0x00000F9E>;
 
-		clocks = <&clock_gcc_gfx clk_gcc_oxili_gfx3d_clk>,
-			 <&clock_gcc_gfx clk_gcc_oxili_ahb_clk>,
-			 <&clock_gcc_gfx clk_gcc_oxili_gmem_clk>,
-			 <&clock_gcc_gfx clk_gcc_bimc_gfx_clk>,
-			 <&clock_gcc_gfx clk_gcc_gtcu_ahb_clk>,
-			 <&clock_gcc_gfx clk_gcc_oxili_timer_clk>,
-			 <&clock_gcc_gfx clk_gcc_gfx_tcu_clk>,
-			 <&clock_gcc_gfx clk_gcc_gfx_tbu_clk>,
-			 <&clock_gcc_gfx clk_gcc_oxili_aon_clk>,
-			 <&clock_gcc_gfx clk_gcc_gfx_1_tbu_clk>;
 
+		clocks = <&clock_gcc_gfx GCC_GFX3D_OXILI_CLK>,
+			 <&clock_gcc_gfx GCC_GFX3D_OXILI_AHB_CLK>,
+			 <&clock_gcc_gfx GCC_GFX3D_OXILI_GMEM_CLK>,
+			 <&clock_gcc_gfx GCC_GFX3D_BIMC_CLK>,
+			// <&clock_gcc_gfx clk_gcc_gtcu_ahb_clk>,
+			 <&clock_gcc_gfx GCC_GFX3D_OXILI_TIMER_CLK>,
+			 <&clock_gcc_gfx GCC_GFX3D_TCU_CLK>,
+			 <&clock_gcc_gfx GCC_GFX3D_TBU0_CLK>,
+			 <&clock_gcc_gfx GCC_GFX3D_TBU1_CLK>,
+			 <&clock_gcc_gfx GCC_GFX3D_OXILI_AON_CLK>;
+		/*
+		 * Note: The GTBU1 clock has been declared as gtcu_iface_clk.
+		 * This change is intentional and makes us able to get the
+		 * correct clock enablement and disablement sequences, due
+		 * to the seriously dumb kgsl_pwrctrl clocks management.
+		 */
 		clock-names =   "core_clk", "iface_clk", "mem_clk",
-				"mem_iface_clk", "gtcu_iface_clk", "rbbmtimer_clk",
-				"gtcu_clk", "gtbu_clk", "alwayson_clk", "gtbu1_clk";
+				"mem_iface_clk", //"alt_mem_iface_clk",
+				"rbbmtimer_clk",
+				"gtcu_clk", "gtbu_clk", "gtcu_iface_clk",
+				"alwayson_clk";
 
 		/* Bus Scale Settings */
 		qcom,gpubw-dev = <&gpubw>;
@@ -106,6 +119,8 @@
 				<26 512 0 6451200>, /* 9. 806.4  MHz */
 				<26 512 0 7449600>; /*10. 931.2  MHz */
 
+		/* GDSC regulator names */
+		regulator-names = "vddcx", "vdd";
 		/* GDSC oxili regulators */
 		vddcx-supply = <&gdsc_oxili_cx>;
 		vdd-supply = <&gdsc_oxili_gx>;
@@ -137,7 +152,7 @@
 			/* TURBO */
 			qcom,gpu-pwrlevel@1 {
 				reg = <1>;
-				qcom,gpu-freq = <550000000>;
+				qcom,gpu-freq = <540000000>;
 				qcom,bus-freq = <9>;
 				qcom,bus-min = <9>;
 				qcom,bus-max = <10>;
@@ -197,16 +212,19 @@
 		* The gpu can only program a single context bank
 		* at this fixed offset.
 		*/
-		qcom,protect = <0x40000 0x10000>;
+		qcom,protect = <0x40000 0x20000>;
 		qcom,micro-mmu-control = <0x6000>;
 
-		clocks = <&clock_gcc clk_gcc_smmu_cfg_clk>,
-			<&clock_gcc_gfx clk_gcc_gfx_tcu_clk>,
-			<&clock_gcc_gfx clk_gcc_gtcu_ahb_clk>,
-			<&clock_gcc_gfx clk_gcc_gfx_tbu_clk>,
-			<&clock_gcc_gfx clk_gcc_gfx_1_tbu_clk>;
+		clocks = <&clock_gcc GCC_SMMU_CFG_CLK>,
+			<&clock_gcc_gfx GCC_GFX3D_TCU_CLK>,
+			<&clock_gcc_gfx GCC_GFX3D_GTCU_AHB_CLK>,
+			<&clock_gcc_gfx GCC_GFX3D_TBU0_CLK>,
+			<&clock_gcc_gfx GCC_GFX3D_TBU1_CLK>,
+			<&clock_gcc_gfx GCC_GFX3D_OXILI_AHB_CLK>,
+			<&clock_gcc_gfx GCC_GFX3D_BIMC_CLK>;
 		clock-names = "scfg_clk", "gtcu_clk", "gtcu_iface_clk",
-				"gtbu_clk", "gtbu1_clk";
+				"gtbu_clk", "gtbu1_clk", "gpu_ahb_clk",
+				"gcc_bimc_gfx_clk";
 
 		qcom,secure_align_mask = <0xfff>;
 		gfx3d_user: gfx3d_user {
