@@ -201,7 +201,7 @@
 &soc {
 	/delete-node/ qcom,cpu-clock-8976@b016000;
 
-	clock_cpu: qcom,cpu-clock-8976@b016000 {
+	clock_cpu: cpu-clock-controller@b016000 {
 		#address-cells = <1>;
 		#size-cells = <1>;
 		compatible = "qcom,cpu-clock-8976";
@@ -252,10 +252,10 @@
 		vdd_a72-supply = <&apc1_vreg_corner>;
 		vdd_a53-supply = <&apc0_vreg_corner>;
 		vdd_cci-supply = <&apc0_vreg_corner>;
-		clocks = <&clock_gcc clk_xo_a_clk_src>,
-			 <&clock_gcc clk_gpll4_clk_src>,
-			 <&clock_gcc clk_gpll0_ao_clk_src>;
-		clock-names = "xo_a", "aux_clk_2", "aux_clk_3";
+		clocks = <&clock_rpmcc RPM_XO_A_CLK_SRC>,
+			 <&clock_gcc GPLL4_CLK_SRC>,
+			 <&clock_gcc GPLL0_AO_CLK_SRC>;
+		clock-names = "cxo_a", "aux_clk_2", "aux_clk_3";
 		qcom,speed0-bin-v0-c0 =
 			<          0 0>,
 			<  400000000 1>,
