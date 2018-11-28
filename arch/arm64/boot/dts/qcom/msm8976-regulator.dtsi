@@ -607,8 +607,8 @@
 		compatible = "qcom,cpr2-gfx-regulator";
 		reg = <0x98000 0x1000>, <0xa4000 0x1000>;
 		reg-names = "rbcpr", "efuse_addr";
-		clocks = <&clock_gcc clk_gcc_rbcpr_gfx_clk>,
-			<&clock_gcc clk_gcc_rbcpr_gfx_ahb_clk>;
+		clocks = <&clock_gcc GCC_RBCPR_GFX_CLK>,
+			<&clock_gcc GCC_RBCPR_GFX_AHB_CLK>;
 		clock-names = "core_clk", "iface_clk";
 		interrupts = <0 314 0>;
 
@@ -705,7 +705,7 @@
 		compatible = "regulator-fixed";
 		regulator-name = "adv_vreg";
 		startup-delay-us = <400>;
-		enable-avtive-high;
+		enable-active-high;
 		gpio = <&pm8004_mpps 4 0>;
 	};
 
@@ -717,5 +717,19 @@
 		gpio = <&pm8950_gpios 5 0>;
 		regulator-name = "rome_vreg";
 		status = "disabled";
+	};
+
+	stub_mmagic_camss: stub_mmagic {
+		compatible = "qcom,stub-regulator";
+		regulator-name = "mmagic";
+		regulator-min-microvolt = <1>;
+		regulator-max-microvolt = <1800000>;
+	};
+
+	stub_camss_top: stub_gdscr {
+		compatible = "qcom,stub-regulator";
+		regulator-name = "gdscr";
+		regulator-min-microvolt = <1>;
+		regulator-max-microvolt = <1800000>;
 	};
 };
