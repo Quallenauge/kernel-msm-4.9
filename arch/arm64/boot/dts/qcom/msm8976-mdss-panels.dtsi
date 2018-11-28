@@ -10,6 +10,8 @@
  * GNU General Public License for more details.
  */
 
+#include "dsi-panel-nt35597-dualmipi-wqxga-video.dtsi"
+
 &soc {
 	dsi_panel_pwr_supply: dsi_panel_pwr_supply {
 		#address-cells = <1>;
