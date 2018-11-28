@@ -422,6 +422,31 @@
 			};
 		};
 
+		sdc3_wlan_gpio {
+			sdc3_wlan_gpio_active: sdc3_wlan_gpio_active {
+				mux {
+					pins = "gpio34";
+					function = "sdc3";
+				};
+				config {
+					output-high;
+					drive-strength = <8>; /* 8 MA */
+					bias-pull-up; /* pull up */
+				};
+			};
+			sdc3_wlan_gpio_sleep: sdc3_wlan_gpio_sleep {
+				mux {
+					pins = "gpio34";
+					function = "sdc3";
+				};
+				config {
+					output-low;
+					drive-strength = <2>; /* 2 MA */
+					bias-disable;
+				};
+			};
+		};
+
 		pmx_mdss: pmx_mdss {
 			mdss_dsi_active: mdss_dsi_active {
 				mux {
