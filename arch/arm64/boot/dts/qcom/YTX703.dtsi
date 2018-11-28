@@ -171,29 +171,79 @@
  * - Overrides dsi-panel-nt35597-dualmipi-wqxga-video.dtsi
  */
 &dsi_dual_nt35597_video {
-	qcom,mdss-dsi-panel-width = <800>;  /* Previously 720 */
-	qcom,mdss-dsi-h-front-porch = <17>; /* Horizontal front porch in pixels; previously 100 */
-	qcom,mdss-dsi-h-back-porch = <30>;  /* Horizontal back porch in pixels; previously 32 */
-	qcom,mdss-dsi-h-pulse-width = <4>;  /* Previously 16 */
-	qcom,mdss-dsi-v-back-porch = <24>;  /* Vertical back porch in pixels; previously 7 */
-	qcom,mdss-dsi-v-front-porch = <16>; /* Vertical front porch in pixels; previously 8 */
-	qcom,mdss-dsi-v-pulse-width = <8>;  /* Previously 1 */
-	qcom,mdss-dsi-on-command =
-	       [39 01 00 00 01 00 06 f0 55 aa 52 08 00
-	        15 01 00 00 01 00 02 c0 0d
-	        39 01 00 00 01 00 05 b8 03 06 00 00
-	        39 01 00 00 01 00 05 ff aa 55 a5 80
-	        15 01 00 00 01 00 02 6f 0f
-	        15 01 00 00 01 00 02 f7 01
-	        39 01 00 00 01 00 05 ff aa 55 a5 00
-	        15 01 00 00 01 00 02 62 01
-	        15 01 00 00 01 00 02 55 00 /* CABC (0: off, 1: UI, 2: Picture, 3: Video) */
-	        15 01 00 00 01 00 02 53 24
-	        15 01 00 00 01 00 02 51 80
-	        05 01 00 00 78 00 02 11 00
-	        05 01 00 00 15 00 02 29 00];
-	/* DSI PHY timings */
-	qcom,mdss-dsi-panel-timings = [D5 32 22 00 60 64 26 34 29 03 04 00];
+/*
+        qcom,mdss-dsi-panel-timings-phy-v2 = [23 1e 07 08 05 03 04 a0
+                23 1e 07 08 05 03 04 a0
+                23 1e 07 08 05 03 04 a0
+                23 1e 07 08 05 03 04 a0
+                23 18 07 08 04 03 04 a0];
+*/
+        qcom,mdss-dsi-min-refresh-rate = <53>;
+        qcom,mdss-dsi-max-refresh-rate = <60>;
+
+	qcom,panel-supply-entries = <&dsi_panel_pwr_supply>;
+    qcom,mdss-dsi-tx-eot-append;
+//	qcom,mdss-dsi-bl-pmic-control-type = "bl_ctrl_wled";
+	qcom,mdss-dsi-bl-min-level = <1>;
+	qcom,mdss-dsi-bl-max-level = <4095>;
+	qcom,mdss-dsi-pan-enable-dynamic-fps;
+	qcom,mdss-dsi-pan-fps-update = "dfps_immediate_porch_mode_hfp";
+	// qcom,mdss-dsi-reset-sequence = <1 20>, <0 20>, <1 50>; // qcom,mdss-dsi-reset-sequence = <1 10>, <0 10>, <1 10>;
+	// qcom,mdss-dsi-t-clk-pre = <0x2a>; // qcom,mdss-dsi-t-clk-pre = <0x2d>;
+	qcom,mdss-dsi-mode-sel-gpio-state = "high"; // formerly known as qcom,mdss-dsi-mode-sel-gpio-state = "dsc_mode";
+	// qcom,mdss-dsi-t-clk-post = <0x0d>;
+    qcom,mdss-dsi-display-timings {
+        timing@0 {
+            qcom,mdss-dsi-panel-width = <800>;  /* Previously 720 */
+            qcom,mdss-dsi-h-front-porch = <17>; /* Horizontal front porch in pixels; previously 100 */
+            qcom,mdss-dsi-h-back-porch = <30>;  /* Horizontal back porch in pixels; previously 32 */
+            qcom,mdss-dsi-h-pulse-width = <4>;  /* Previously 16 */
+            qcom,mdss-dsi-v-back-porch = <24>;  /* Vertical back porch in pixels; previously 7 */
+            qcom,mdss-dsi-v-front-porch = <16>; /* Vertical front porch in pixels; previously 8 */
+            qcom,mdss-dsi-v-pulse-width = <8>;  /* Previously 1 */
+            qcom,mdss-dsi-bl-pmic-control-type = "bl_ctrl_dcs"; /* control backlight via dsi commands */
+            /* Backlight controller operates in range 0<x<256 */
+            qcom,mdss-dsi-bl-min-level = <0x01>;
+            qcom,mdss-dsi-bl-max-level = <0xFF>;
+            qcom,mdss-dsi-post-init-delay = <0x1>;
+            qcom,mdss-dsi-on-command =
+                   [39 01 00 00 01 00 06 f0 55 aa 52 08 00 /* Set internal registers */
+                    15 01 00 00 01 00 02 c0 0d
+                    39 01 00 00 01 00 05 b8 03 06 00 00
+                    39 01 00 00 01 00 05 ff aa 55 a5 80 /* Set internal registers */
+                    15 01 00 00 01 00 02 6f 0f
+                    15 01 00 00 01 00 02 f7 01
+                    39 01 00 00 01 00 05 ff aa 55 a5 00 /* Set internal registers */
+                    15 01 00 00 01 00 02 62 01
+                    15 01 00 00 01 00 02 5E 10 /* Set minimal brightness used in cabc */
+                    05 01 00 00 78 00 02 11 00 /* Exit the sleep mode */
+                   ];
+            /* DSI PHY timings */
+            qcom,mdss-dsi-panel-timings = [D5 32 22 00 60 64 26 34 29 03 04 00];
+            qcom,mdss-dsi-post-panel-on-command =
+                   [39 01 00 00 01 00 02 FF 23 /* Enter CMD2 page3 */
+                    39 01 00 00 00 00 02 00 02 /* DMCT = 1, Select the enable / disable mechanism for CABC and Manual dimming functions. */
+                    39 01 00 00 00 00 02 05 24 /* Moving mode dimming 32step, still mode 32step */
+                    39 01 00 00 00 00 02 FB 01 /* MTP do not reload CMD2 P3 */
+                    39 01 00 00 01 00 02 FF 10 /* Enter CMD1 */
+                    15 01 00 00 01 00 02 53 2C /* Enable backlight via pwm control.
+                                                  Enable dimming in general (with or w/o cabc). */
+                    05 01 00 00 15 00 02 29 00 /* Display on */
+                  ];
+
+            qcom,config-select = <&dsi_dual_nt35597_video_config1>;
+
+            cm,mdss-livedisplay-command-state = "dsi_lp_mode";
+
+            /* CABC init commands / values */
+            cm,mdss-livedisplay-cabc-cmd = [
+                15 01 00 00 01 00 02 55 00 /* CABC (0: off, 1: UI, 2: Picture, 3: Video) */
+            ];
+            cm,mdss-livedisplay-cabc-ui-value = <0x02>;
+            cm,mdss-livedisplay-cabc-image-value = <0x02>;
+            cm,mdss-livedisplay-cabc-video-value = <0x02>;
+        };
+    };
 };
 /*
  * Overrides msm8976-mdss-mtp.dtsi
