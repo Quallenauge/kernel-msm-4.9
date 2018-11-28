@@ -53,7 +53,7 @@
 		i2c6  = &i2c_6;
 		i2c8  = &i2c_8;
 		spi0  = &spi_0;
-		serial0 = &uartblsp1dm1;
+		serial0 = &blsp1_uart2;
 	};
 
 	chosen {
