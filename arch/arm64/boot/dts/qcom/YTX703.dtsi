@@ -326,8 +326,8 @@
 		synaptics,pwr-reg-name = "vdd_ana";
 		synaptics,bus-reg-name = "vcc_i2c";
 		clock-names = "iface_clk", "core_clk";
-		clocks = <&clock_gcc clk_gcc_blsp1_ahb_clk>,
-			<&clock_gcc clk_gcc_blsp1_qup4_i2c_apps_clk>;
+		clocks = <&clock_gcc GCC_BLSP1_AHB_CLK>,
+				 <&clock_gcc GCC_BLSP1_QUP4_I2C_APPS_CLK>;
 		/* pins used by touchscreen */
 		pinctrl-names = "pmx_ts_active","pmx_ts_suspend","pmx_ts_release";
 		pinctrl-0 = <&ts_int_active &ts_reset_active>;
