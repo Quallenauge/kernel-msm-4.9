@@ -413,7 +413,7 @@
  * - msm-pmi8950.dtsi
  * - msm8976-mtp.dtsi
  */
-&pmi8950_haptic {
+&pmi_haptic {
 	qcom,actuator-type = "erm";
 	qcom,vmax-mv = <2200>;
 };
@@ -421,6 +421,7 @@
  * Charger
  * Overrides msm-pmi8950.dtsi
  */
+#if 0
 &pmi8950_charger {
 	qcom,battery-psy-name= "battery";
 	qcom,fastchg-current-ma = <3000>;
@@ -433,7 +434,7 @@
 	/delete-property/ qcom,aicl-rerun-period-s;
 	/delete-property/ qcom,charging-disabled;
 };
-
+#endif
 /* SDHC controller
  * - Overrides msm8976-mtp.dtsi
  * - Documentation/devicetree/bindings/mmc/sdhci-msm.txt
@@ -483,7 +484,7 @@
 		reg = <0x1b00000 0x10000>;
 		reg-names = "msm-cam";
 	};
-
+#if 0
 	/delete-node/ qcom,csiphy@1b0ac00;
 	qcom,csiphy@1b0ac00 {
 		cell-index = <0>;
@@ -985,6 +986,8 @@
 			qcom,cci-clk-src = <37500000>;
 		};
 	};
+	
+#endif
 };
 
 /*
@@ -998,6 +1001,7 @@
 &soc {
 	/delete-node/ qcom,camera-flash;
 };
+#if 0
 &cci {
 	actuator0: qcom,actuator@0 {
 		cell-index = <0>;
@@ -1195,4 +1199,4 @@
 		qcom,clock-rates = <24000000 0>;
 	};
 };
-
+#endif
